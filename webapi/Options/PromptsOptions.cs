@@ -32,19 +32,19 @@ public class PromptsOptions
     internal double MemoriesResponseContextWeight { get; } = 0.6;
 
     /// <summary>
-    /// Weight of information returned from planner (i.e., responses from OpenAPI skills).
+    /// Weight of information returned from planner (i.e., responses from OpenAPI functions).
     /// Contextual prompt excludes all the system commands and user intent.
     /// </summary>
     internal double ExternalInformationContextWeight { get; } = 0.3;
 
     /// <summary>
-    /// Upper bound of the relevancy score of a semantic memory to be included in the final prompt.
+    /// Upper bound of the relevancy score of a kernel memory to be included in the final prompt.
     /// The actual relevancy score is determined by the memory balance.
     /// </summary>
     internal float SemanticMemoryRelevanceUpper { get; } = 0.9F;
 
     /// <summary>
-    /// Lower bound of the relevancy score of a semantic memory to be included in the final prompt.
+    /// Lower bound of the relevancy score of a kernel memory to be included in the final prompt.
     /// The actual relevancy score is determined by the memory balance.
     /// </summary>
     internal float SemanticMemoryRelevanceLower { get; } = 0.6F;
@@ -71,10 +71,15 @@ public class PromptsOptions
     /// </summary>
     [Required, NotEmptyOrWhitespace] public string PlanResultsDescription { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Supplement to help guide model in using a response from StepwisePlanner.
+    /// </summary>
+    [Required, NotEmptyOrWhitespace] public string StepwisePlannerSupplement { get; set; } = string.Empty;
+
     internal string[] SystemAudiencePromptComponents => new string[]
     {
         this.SystemAudience,
-        "{{ChatSkill.ExtractChatHistory}}",
+        "{{ChatPlugin.ExtractChatHistory}}",
         this.SystemAudienceContinuation
     };
 
@@ -84,7 +89,7 @@ public class PromptsOptions
     {
         this.SystemDescription,
         this.SystemIntent,
-        "{{ChatSkill.ExtractChatHistory}}",
+        "{{ChatPlugin.ExtractChatHistory}}",
         this.SystemIntentContinuation
     };
 
@@ -120,7 +125,7 @@ public class PromptsOptions
         $"{this.LongTermMemoryName} Description:\n{this.LongTermMemoryExtraction}",
         this.MemoryAntiHallucination,
         $"Chat Description:\n{this.SystemDescription}",
-        "{{ChatSkill.ExtractChatHistory}}",
+        "{{ChatPlugin.ExtractChatHistory}}",
         this.MemoryContinuation
     };
 
@@ -136,7 +141,7 @@ public class PromptsOptions
         $"{this.WorkingMemoryName} Description:\n{this.WorkingMemoryExtraction}",
         this.MemoryAntiHallucination,
         $"Chat Description:\n{this.SystemDescription}",
-        "{{ChatSkill.ExtractChatHistory}}",
+        "{{ChatPlugin.ExtractChatHistory}}",
         this.MemoryContinuation
     };
 

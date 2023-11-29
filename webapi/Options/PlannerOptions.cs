@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 using System.ComponentModel.DataAnnotations;
 using CopilotChat.WebApi.Models.Response;
-using Microsoft.SemanticKernel.Planning.Stepwise;
+using Microsoft.SemanticKernel.Planners;
 
 namespace CopilotChat.WebApi.Options;
 
@@ -65,6 +65,12 @@ public class PlannerOptions
     /// Options on how to handle planner errors.
     /// </summary>
     public ErrorOptions ErrorHandling { get; set; } = new ErrorOptions();
+
+    /// <summary>
+    /// Optional flag to indicate whether to use the planner result as the bot response.
+    /// </summary>
+    [RequiredOnPropertyValue(nameof(Type), PlanType.Stepwise)]
+    public bool UseStepwiseResultAsBotResponse { get; set; } = false;
 
     /// <summary>
     /// The configuration for the stepwise planner.

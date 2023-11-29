@@ -11,8 +11,8 @@ import {
 import { useState } from 'react';
 import { COPY } from '../../../../assets/strings';
 import { DependencyDetails } from '../../../../libs/models/BotResponsePrompt';
+import { PlanExecutionMetadata } from '../../../../libs/models/PlanExecutionMetadata';
 import { StepwiseStep } from '../../../../libs/models/StepwiseStep';
-import { StepwiseThoughtProcess } from '../../../../libs/models/StepwiseThoughtProcess';
 import { formatParagraphTextContent } from '../../../utils/TextUtils';
 import { StepwiseStepView, useStepClasses } from './StepwiseStepView';
 
@@ -33,7 +33,7 @@ interface IStepwiseThoughtProcessViewProps {
 export const StepwiseThoughtProcessView: React.FC<IStepwiseThoughtProcessViewProps> = ({ thoughtProcess }) => {
     const classes = useClasses();
     const stepClasses = useStepClasses();
-    const stepwiseDetails = thoughtProcess.context as StepwiseThoughtProcess;
+    const stepwiseDetails = thoughtProcess.context as PlanExecutionMetadata;
     const steps = JSON.parse(stepwiseDetails.stepsTaken) as StepwiseStep[];
 
     const testResultNotFound = thoughtProcess.result.matchAll(COPY.STEPWISE_RESULT_NOT_FOUND_REGEX);
@@ -65,7 +65,9 @@ export const StepwiseThoughtProcessView: React.FC<IStepwiseThoughtProcessViewPro
                     <Body1Strong>Time Taken:</Body1Strong>
                     <Body1>{stepwiseDetails.timeTaken}</Body1>
                     <Body1Strong>Plugins Used:</Body1Strong>
-                    <Body1>{!stepwiseDetails.skillsUsed.startsWith('0') ? stepwiseDetails.skillsUsed : 'None'}</Body1>
+                    <Body1>
+                        {!stepwiseDetails.functionsUsed.startsWith('0') ? stepwiseDetails.functionsUsed : 'None'}
+                    </Body1>
                 </>
             )}
             {(resultNotFound || showthoughtProcess) && (
