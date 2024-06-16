@@ -32,13 +32,13 @@ jobs:
           fetch-depth: 0
 
       - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0
+        uses: gittools/actions/gitversion/setup@v1
         with:
           versionSpec: "5.x"
 
       - name: Determine version
         id: gitversion
-        uses: gittools/actions/gitversion/execute@v0
+        uses: gittools/actions/gitversion/execute@v1
 
       - name: Set version tag
         id: versiontag
@@ -50,21 +50,21 @@ jobs:
           Write-Output "versiontag=$VERSION_TAG" >> $env:GITHUB_OUTPUT
 
       - name: Set .Net Core version
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
 
       - name: Package Copilot Chat Plugins
         run: |
           scripts\deploy\package-plugins.ps1 `
             -BuildConfiguration Release `
-            -DotNetFramework net6.0 `
+            -DotNetFramework net8.0 `
             -OutputDirectory ${{ github.workspace }}\scripts\deploy `
             -Version ${{ steps.versiontag.outputs.versiontag }} `
             -InformationalVersion "Built from commit ${{ steps.gitversion.outputs.ShortSha }} on $(Get-Date -Format "yyyy-MM-dd")"
 
       - name: Upload packages to artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: copilotchat-plugins-${{ steps.versiontag.outputs.versiontag }}
           path: ${{ github.workspace }}\scripts\deploy\out\plugins

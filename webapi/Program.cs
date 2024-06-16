@@ -2,7 +2,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -45,7 +44,6 @@ public sealed class Program
             .AddOptions(builder.Configuration)
             .AddPersistentChatStore()
             .AddPlugins(builder.Configuration)
-            .AddUtilities()
             .AddChatCopilotAuthentication(builder.Configuration)
             .AddChatCopilotAuthorization();
 
@@ -53,7 +51,6 @@ public sealed class Program
         builder
             .AddBotConfig()
             .AddSemanticKernelServices()
-            .AddPlannerServices()
             .AddSemanticMemoryServices();
 
         // Add SignalR as the real time relay service
@@ -71,11 +68,6 @@ public sealed class Program
 
         // Add named HTTP clients for IHttpClientFactory
         builder.Services.AddHttpClient();
-        builder.Services.AddHttpClient("Plugin", httpClient =>
-        {
-            int timeout = int.Parse(builder.Configuration["Planner:PluginTimeoutLimitInS"] ?? "100", CultureInfo.InvariantCulture);
-            httpClient.Timeout = TimeSpan.FromSeconds(timeout);
-        });
 
         // Add in the rest of the services.
         builder.Services
